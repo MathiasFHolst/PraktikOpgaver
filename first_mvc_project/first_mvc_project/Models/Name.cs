@@ -6,7 +6,7 @@ namespace first_mvc_project.Models
     {
         public int Id { get; set; }
         public string Title { get; set; }
+        
         public int Random { get; set; }
     }
-
 }

@@ -7,38 +7,76 @@
 }
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!--Insert Chart-->
+<div>
+    <canvas id="myChart"></canvas>
+</div>
+
+<script>
+    const labels = ['Navn', 'Navn', 'Navn', 'Navn', 'Navn', 'Navn', 'Navn', 'Navn', 'Navn', 'Navn'];
+        
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'Mathias\'s chart over ViewData',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: [1, 3, 4, 5, 1, 2, 4, 1, 4, 8],
+            }]
+        };
+        const config = {
+            type: 'line',
+            data,
+            options: {}
+        };
+        
+        var myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+</script>
+
 <ul id="listOfViewData">
     <!--Creates first instance of (10) <li>'s not dynamic-->
     @foreach(var data in Model.Names){
         <li style="font-size : 70px" id="@data.Id">
             @data.Title @data.Random
         </li>
+        
     }
 
 </ul>
         
-<script type="text/javascript">
-
+<script>
     function update(){
     let idIndex = 1;
     var ul = document.getElementById("listOfViewData");
     // AJAX GET gets the function from Controller and recieves an object with the newly created data
     var url = "Welcome/getNewData";
-    $.get(url, null, function(data) {
+    $.get(url, null, function(Controllerdata) {
 
         // Empty the <ul> for <li>'s before inserting the newly generated data from the AJAX GET
         $(ul).empty();
+        data.datasets[0].data.length = 0;
+        labels.length = 0;
 
-        for(let i = 0; i < data.names.length; i++, idIndex++){
+        for(let i = 0; i < Controllerdata.names.length; i++, idIndex++){
             // Adds the newly recieved data from Controller and adds it onto the already existing elements in the <ul>
-            document.getElementById(`listOfViewData`).innerHTML += "<li style='font-size : 70px' id=" + data.names[i].id + ">" + data.names[i].title + " " + data.names[i].random + "</li>";
+            document.getElementById(`listOfViewData`).innerHTML += "<li style='font-size : 70px' id=" + Controllerdata.names[i].id + ">" + Controllerdata.names[i].title + " " + Controllerdata.names[i].random + "</li>";
+
+            labels[i]= Controllerdata.names[i].title;
+            data.datasets[0].data[i]= Controllerdata.names[i].random;
+            console.log(data.datasets[0].data[i]);
         }
+            myChart.update();
+
+
         // Debug into Console how many elementes of <li> there is inside the <ul> with id listOfViewData
-        console.log(document.querySelectorAll("#listOfViewData li").length);
+        //console.log(document.querySelectorAll("#listOfViewData li").length);
     });
     }
 
     // Runs the update function every second
     setInterval(update, 2000);
-
 </script>
