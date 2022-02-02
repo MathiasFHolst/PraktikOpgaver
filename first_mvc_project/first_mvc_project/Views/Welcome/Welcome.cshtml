@@ -7,7 +7,8 @@
 }
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<ul>
+<ul id="listOfViewData">
+    <!--Creates first instance of (10) <li>'s not dynamic-->
     @foreach(var data in Model.Names){
         <li style="font-size : 70px" id="@data.Id">
             @data.Title @data.Random
@@ -19,14 +20,25 @@
 <script type="text/javascript">
 
     function update(){
-    var url = "Welcome/getNewData";
     let idIndex = 1;
+    var ul = document.getElementById("listOfViewData");
+    // AJAX GET gets the function from Controller and recieves an object with the newly created data
+    var url = "Welcome/getNewData";
     $.get(url, null, function(data) {
-        for(let i = 0; i < data.names.length; i++){
-            $(`#${idIndex}`).html(data.names[i].title + " " + data.names[i].random);
-            idIndex++;
+
+        // Empty the <ul> for <li>'s before inserting the newly generated data from the AJAX GET
+        $(ul).empty();
+
+        for(let i = 0; i < data.names.length; i++, idIndex++){
+            // Adds the newly recieved data from Controller and adds it onto the already existing elements in the <ul>
+            document.getElementById(`listOfViewData`).innerHTML += "<li style='font-size : 70px' id=" + data.names[i].id + ">" + data.names[i].title + " " + data.names[i].random + "</li>";
         }
+        // Debug into Console how many elementes of <li> there is inside the <ul> with id listOfViewData
+        console.log(document.querySelectorAll("#listOfViewData li").length);
     });
     }
-    setInterval(update, 1000);
+
+    // Runs the update function every second
+    setInterval(update, 2000);
+
 </script>

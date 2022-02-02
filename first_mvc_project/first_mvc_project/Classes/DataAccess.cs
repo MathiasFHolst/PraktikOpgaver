@@ -28,7 +28,7 @@ namespace first_mvc_project.Classes
 
 
             // Insert rows in columns
-            for (int i = 1; i < rnd.Next(3,10); i++)
+            for (int i = 1; i < rnd.Next(4, 11); i++)
             {
                 firstDataset.Tables[0].Rows.Add(i, "Navn", rnd.Next(0, 10));
             }
